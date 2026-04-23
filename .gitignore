@@ -1,0 +1,9 @@
+.next
+node_modules
+dist
+tsconfig.tsbuildinfo
+.env
+data/uploads/*
+data/documents/*
+!data/uploads/.gitkeep
+!data/documents/.gitkeep
