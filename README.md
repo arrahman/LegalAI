@@ -139,10 +139,6 @@ npm --version
 
 ### 1. Open the project folder
 
-```powershell
-cd "C:\Users\16475\Documents\Legal Document AI"
-```
-
 ### 2. Install dependencies
 
 ```powershell
