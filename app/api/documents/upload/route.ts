@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createDocument, saveUpload } from "@/lib/documentStore";
-import { extractTextFromFile } from "@/lib/extractText";
+import { createDocumentParser, documentParserIds } from "@/lib/documentParsers";
 
 const schema = z.object({
   documentType: z.enum([
@@ -11,7 +11,8 @@ const schema = z.object({
     "vendor_agreement",
     "lease_agreement",
     "other"
-  ])
+  ]),
+  parser: z.enum(documentParserIds).default("extract_text")
 });
 
 export async function POST(request: Request) {
@@ -19,7 +20,8 @@ export async function POST(request: Request) {
     const form = await request.formData();
     const file = form.get("file");
     const parsed = schema.parse({
-      documentType: form.get("documentType") || "other"
+      documentType: form.get("documentType") || "other",
+      parser: form.get("parser") || "extract_text"
     });
 
     if (!(file instanceof File)) {
@@ -27,7 +29,12 @@ export async function POST(request: Request) {
     }
 
     const saved = await saveUpload(file);
-    const text = await extractTextFromFile(saved.filePath, file.type, file.name);
+    const parser = createDocumentParser(parsed.parser);
+    const text = await parser.parse({
+      filePath: saved.filePath,
+      mimeType: file.type || "application/octet-stream",
+      fileName: file.name
+    });
 
     if (text.length < 50) {
       return NextResponse.json(

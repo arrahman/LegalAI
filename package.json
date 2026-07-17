@@ -4,6 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:docling": "docker compose up -d docling",
+    "dev:all": "docker compose up -d docling && next dev",
+    "docling:logs": "docker compose logs -f docling",
+    "docling:stop": "docker compose stop docling",
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit"

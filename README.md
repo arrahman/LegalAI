@@ -107,7 +107,8 @@ lib/
   chunk.ts                Text chunking
   clauseDetector.ts       Clause extraction and comparison
   documentStore.ts        Local document/chunk/embedding storage
-  extractText.ts          PDF/DOCX/TXT extraction
+  extractText.ts          Built-in PDF/DOCX/TXT extraction
+  documentParsers/        Parser interface, factory, and adapters
   openai.ts               OpenAI client and model settings
   rag.ts                  RAG answer and summary logic
   retrieval.ts            Vector/keyword retrieval
@@ -179,6 +180,44 @@ For higher quality at higher cost:
 OPENAI_CHAT_MODEL=gpt-5.1
 OPENAI_EMBEDDING_MODEL=text-embedding-3-large
 ```
+
+### Optional: use the local Docling parser
+
+Docker Desktop is required for the included local Docling service. Start
+Docling and the Next.js app together with:
+
+```powershell
+npm run dev:all
+```
+
+The first run downloads the Docling image and can take several minutes. The
+services are then available at:
+
+- application: `http://localhost:3000`
+- Docling API: `http://localhost:5001`
+- Docling UI: `http://localhost:5001/ui`
+
+The built-in parser remains selected by default. Choose **Docling (OCR and
+layout)** in the upload form when you want to use the local service.
+
+Useful service commands:
+
+```powershell
+npm run dev:docling    # start only Docling
+npm run docling:logs   # follow Docling logs
+npm run docling:stop   # stop Docling
+```
+
+The application defaults to the local URL. To use a different Docling service,
+override it in `.env`:
+
+```env
+DOCLING_SERVICE_URL=http://localhost:5001
+# DOCLING_API_KEY=your_key_if_the_service_requires_one
+```
+
+The app sends uploaded files to Docling's synchronous `/v1/convert/file`
+endpoint and indexes the returned Markdown.
 
 ### 5. Start the development server
 

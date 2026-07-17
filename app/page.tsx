@@ -57,6 +57,7 @@ export default function Home() {
   const [selectedId, setSelectedId] = useState("");
   const [compareId, setCompareId] = useState("");
   const [documentType, setDocumentType] = useState("nda");
+  const [parser, setParser] = useState("extract_text");
   const [file, setFile] = useState<File | null>(null);
   const [question, setQuestion] = useState(starterQuestions[0]);
   const [answer, setAnswer] = useState("");
@@ -96,6 +97,7 @@ export default function Home() {
     const form = new FormData();
     form.append("file", file);
     form.append("documentType", documentType);
+    form.append("parser", parser);
 
     let response: Response;
     let data: any;
@@ -250,6 +252,17 @@ export default function Home() {
               <option value="vendor_agreement">Vendor agreement</option>
               <option value="lease_agreement">Lease agreement</option>
               <option value="other">Other</option>
+            </select>
+          </label>
+          <label className="field">
+            Document parser
+            <select
+              className="select"
+              value={parser}
+              onChange={(event) => setParser(event.target.value)}
+            >
+              <option value="extract_text">Built-in (default)</option>
+              <option value="docling">Docling (OCR and layout)</option>
             </select>
           </label>
           <label className="field">
